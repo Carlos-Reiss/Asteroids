@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Zen+Dots&display=swap" rel="stylesheet">
+  <title>Asteroids Game</title>
+</head>
+
+<body>
+  <div class="container">
+    <div class="header-game">
+      <h1>Asteroids - Game</h1>
+    </div>
+
+    <div class="game">
+      <div class="resize">
+        <input type="number"  name="width" id="width" placeholder="widht">
+        <input type="number" name="height" id="height" placeholder="height">
+        <button onclick="Redimencionar()">Resize</button>
+      </div>
+      <div class="model-canvas">
+        <canvas id="gameCanvas" width="720" height="560"></canvas>
+      </div>
+      <div class="log-game">
+        <p>Insira seu nick para iniciar o jogo!</p>
+        <div>
+          <div>
+            <div style="display: flex; flex-direction: row; align-items: center; justify-content: center;">
+              <button class="btn">&#129044;</button>
+              <p style="margin:5px 0 0 10px;">Girar nave pra esquerda</p>
+            </div>
+            <div style="display: flex; flex-direction: row; align-items: center; justify-content: center;">
+              <button class="btn">&#129045;</button>
+              <p style="margin:5px 0 0 10px;"> Impulso da Nave</p>
+            </div>
+            <div style="display: flex; flex-direction: row; align-items: center; justify-content: center;">
+              <button class="btn">&#10142;</button>
+              <p style="margin:5px 0 0 10px;">Girar nave pra direita</p>
+            </div>
+
+          </div>
+          <div style="display: flex; flex-direction: row; align-items: center; justify-content: center;">
+            <button id="power">&#129047;</button>
+            <p style="margin:5px 0 0 10px;">Power da nave (Intangível)</p>
+          </div>
+
+
+
+        </div>
+      </div>
+      <div class="game-set">
+        <input type="text" name="nick" id="nick" placeholder="Insira o NickName">
+        <div class="buttons">
+          <button id="startButton" onclick="Btn()">Start</button>
+          <button id="restart">Restart Game</button>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="image-gameover">
+      <img width="100" src="./assets/gameover.png" alt="image game">
+    </div>
+    <div class="image-game">
+      <img width="200" src="./assets/rocket.png" alt="image game">
+    </div>
+  </div>
+  <script src="js/index.js"></script>
+</body>
+
+</html>
