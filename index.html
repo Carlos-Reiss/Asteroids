@@ -16,18 +16,30 @@
     <div class="header-game">
       <h1>Asteroids - Game</h1>
     </div>
+    
+    <div class="score">
+    <h2>HIGH SCORES</h2>
+      <ol id="highScores">
+      </ol>
+    </div>
 
     <div class="game">
+
       <div class="resize">
         <input type="number"  name="width" id="width" placeholder="widht">
         <input type="number" name="height" id="height" placeholder="height">
         <button onclick="Redimencionar()">Resize</button>
       </div>
+
+      <!-- <div class="score"> -->
+      <!-- </div> -->
+
       <div class="model-canvas">
         <canvas id="gameCanvas" width="720" height="560"></canvas>
       </div>
+
       <div class="log-game">
-        <p>Insira seu nick para iniciar o jogo!</p>
+        <p style="margin-bottom: 50px;">Insira seu nick para iniciar o jogo!</p>
         <div>
           <div>
             <div style="display: flex; flex-direction: row; align-items: center; justify-content: center;">
@@ -48,9 +60,6 @@
             <button id="power">&#129047;</button>
             <p style="margin:5px 0 0 10px;">Power da nave (Intangível)</p>
           </div>
-
-
-
         </div>
       </div>
       <div class="game-set">
