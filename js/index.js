@@ -1,6 +1,7 @@
 const FPS = 30;
 const SAVE_KEY_SCORE = 'highscore'; // salvar local storage key da maior pontuacao
-const RANK_KEY_SCORE = 'RankScore';
+const NO_OF_HIGH_SCORES = 10;
+const HIGH_SCORES = 'highScores';
 
 const GAME_LIVES = 5; // inicia com numero de vidas 
 
@@ -36,10 +37,71 @@ const TEXT_SIZE = 40; // texto tamanho da fonte
 let special = true;
 let restart, nickName;
 
+
 document.getElementById("restart").addEventListener(('click'), () => {
   restart = true
   newGame();
+  showHighScores();
 });
+
+
+function showHighScores() {
+  let highScores = JSON.parse(localStorage.getItem(HIGH_SCORES)) || [];
+  let highScoreList = document.getElementById(HIGH_SCORES);
+  
+  if(highScoreList != null){
+    highScoreList.innerHTML = '';
+  }
+
+  highScores.map((score) => {
+    let li = document.createElement('li');
+    li.className = 'rank';
+    li.innerText = `${score.score}  -  ${score.nickName}`;
+    highScoreList.appendChild(li);
+  })
+  // .join('');
+  console.log(highScoreList);
+}
+
+function checkHighScore(score) {
+  if(over == true){    
+    const highScores = JSON.parse(localStorage.getItem(HIGH_SCORES)) || [];
+    const lowestScore = highScores[NO_OF_HIGH_SCORES - 1]?.score ?? 0;
+    
+    console.log(lowestScore);
+
+
+    if ((score > lowestScore )&& over === true) {
+      saveHighScore(score, highScores); // TODO
+      // showHighScores(); // TODO  
+    }
+  }
+}
+
+
+function saveHighScore(score, highScores) {
+  if(nickName == undefined){
+    nickName = prompt('Bom score manda teu nick pra salvar:');
+  }
+
+  const newScore = { score, nickName };
+  
+  
+  // 1. Add to list
+  let exist = highScores.find((item) => (item.nickName === nickName) && (item.score === score) );
+  if (!exist) {
+    highScores.push(newScore);
+  }
+
+  // 2. Sort the list
+  highScores.sort((a, b) => b.score - a.score);
+  
+  // 3. Select new list
+  highScores.splice(NO_OF_HIGH_SCORES);
+  
+  // 4. Save to local storage
+  localStorage.setItem(HIGH_SCORES, JSON.stringify(highScores));
+};
 
 function Btn(){
   document.getElementById("nick").style.display= "none";
@@ -66,7 +128,7 @@ function Redimencionar(){
     resizeCanvas(widht, height);
   }  
   else{
-    alert('widht precisa está entre 600px à 1900 e height entre 1000px à 600px')
+    alert('widht precisa está entre 600px à 1900px e height entre 1000px à 600px')
   }
 }
 
@@ -80,7 +142,7 @@ function resizeCanvas(width, height) {
 }
 
 //  Parametros inicias do game
-let level, lives, roids, auxScoreFlag, score, scoreHigh,ship, text, textAlpha;
+let level, lives, roids, over,auxScoreFlag, score, scoreHigh,ship, text, textAlpha;
 
 newGame();
 
@@ -130,8 +192,7 @@ function destroyAsteroid(index) {
   }
 
   if(auxScoreFlag >= 3000 && ship.power == false){
-    special = true;
-    auxScoreFlag = 0;
+    special = true;    
   }
 
   if(score > scoreHigh){
@@ -151,6 +212,8 @@ function destroyAsteroid(index) {
     newLevel();
   }
 }
+
+document.onload(showHighScores());
 
 function distBetweenPoints(x1, y1, x2, y2){
   return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2)); 
@@ -193,6 +256,8 @@ function gameOver() {
   ship.dead = true;
   text = 'Game Over';
   textAlpha = 1.0;
+  over = true;
+  checkHighScore(score);
 }
 
 function keyDown(/** @type {KeyboardEvent} */ ev ) {
@@ -307,9 +372,16 @@ function newGame() {
   score = 0;
   auxScoreFlag = score;
   ship = newShip();
-  
+  over = true;
+
   let scoreString = JSON.parse(localStorage.getItem(SAVE_KEY_SCORE));
-  
+  // const highScoreString = localStorage.getItem (HIGH_SCORES); 
+  // const highScores = JSON.parse (highScoreString) || [];
+
+  // const lowestScore = highScores[NO_OF_HIGH_SCORES-1]?.score ?? 0;
+
+  // console.log(lowestScore);
+
   if(scoreString == null){
     scoreHigh = 0;
   }
@@ -560,8 +632,9 @@ function update() {
     ctx.fillText(text, canv.width / 2, canv.height * 0.75);
     textAlpha -= (1.0 / TEXT_FADE_TIME / FPS);
   }
-  else if(ship.dead){  
+  else if(ship.dead && over == true){  
     gameOver();
+    over = false
   }
 
   if(special === true){

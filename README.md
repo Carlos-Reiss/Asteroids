@@ -10,3 +10,5 @@ Rework do jogo asteroids(1979) desenvolvido utilizando canvas e webgl.
   cd asteroid-game 
 
 ```
+
+link para jogar a ultima versão do [Asteroids](https://carlos-reiss.github.io/Asteroids/index.html)

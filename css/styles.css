@@ -142,7 +142,7 @@ div canvas {
   display: flex;
   align-items: baseline;
   justify-content: flex-end;
-  position: absolute;
+  position: fixed;
   bottom: 0;
   right: 0;
   z-index: 1;
@@ -155,7 +155,7 @@ div canvas {
   display: flex;
   align-items: baseline;
   justify-content: flex-start;
-  position: absolute;
+  position: fixed;
   bottom: 60px;
   left: 30px;
   z-index: 1;
@@ -188,4 +188,20 @@ div canvas {
 ::-webkit-scrollbar-thumb {
   background: #dad7d7;
   border-radius: 8px;
+}
+
+.score{
+  position: absolute;
+  width: 300px;
+  padding: 20px;
+  margin-left: 20px;
+  margin-top: 20px;
+  border: 1px solid white;
+  border-radius: 8px;
+  z-index: 0;
+}
+.rank{
+  padding: 10px;
+  margin-left: 60px;  
+  font-size: 12px;
 }
