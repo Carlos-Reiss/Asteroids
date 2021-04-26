@@ -125,6 +125,23 @@ body {
   margin-left: 10px;
 }
 
+.sound {
+  position: absolute;  
+  top: 100px;
+  right: 20px;
+}
+
+.sound button {
+  padding: 10px;
+  border-radius: 10px;
+  border: 0;
+  box-sizing: border-box;
+  font-family: 'Zen Dots', cursive;
+  color: white;
+  background-color: #000;
+  margin-left: 10px;  
+}
+
 div canvas {
   /* @media(min-width: 800px){ */
     /* width: 600px; */

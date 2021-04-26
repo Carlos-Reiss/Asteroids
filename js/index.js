@@ -3,6 +3,8 @@ const SAVE_KEY_SCORE = 'highscore'; // salvar local storage key da maior pontuac
 const NO_OF_HIGH_SCORES = 10;
 const HIGH_SCORES = 'highScores';
 
+let MUSIC_ON = true; // sem som o jogo
+let SOUND_ON = true; // sem som o jogo
 const GAME_LIVES = 5; // inicia com numero de vidas 
 
 const SHIP_EXPLODE_DUR = 0.3; // duração de explosão da nave 
@@ -37,6 +39,26 @@ const TEXT_SIZE = 40; // texto tamanho da fonte
 let special = true;
 let restart, nickName;
 
+
+function Musica() {
+  MUSIC_ON = !MUSIC_ON;
+  if(!MUSIC_ON) {
+    document.getElementById('musica').innerText = 'Musica OFF';
+  }
+  else{
+    document.getElementById('musica').innerText = 'Musica ON';
+  }
+}
+
+function Efeitos() {
+  SOUND_ON = !SOUND_ON;
+  if(!SOUND_ON) {
+    document.getElementById('efeito').innerText = 'Efeitos OFF';
+  }
+  else{
+    document.getElementById('efeito').innerText = 'Efeitos ON';
+  }
+}
 
 document.getElementById("restart").addEventListener(('click'), () => {
   restart = true
@@ -116,6 +138,15 @@ document.getElementById("nick").addEventListener(('change'), (e) =>{
 /** @type {HTMLCanvasElement} */
 let canv = document.getElementById('gameCanvas');
 let ctx = canv.getContext("2d");
+
+let fxExplode = new Sound('sounds/explode.m4a');
+let fxHit = new Sound('sounds/hit.m4a', 5, 0.5);
+let fxLaser = new Sound('sounds/laser.m4a', 5, 0.09);
+let fxThrust = new Sound('sounds/thrust.wav', 5, 0.2);
+
+let music = new Music('sounds/music-low.m4a','sounds/music-high.m4a');
+let roidsLeft, roidsTotal;
+
 let DM_width = 920;
 let DM_height = 700;
 
@@ -156,6 +187,8 @@ function start() {
 
 function createAsteroidBelt() {
   roids = [];
+  roidsTotal = (ROIDS_NUM + level) * 7;
+  roidsLeft = roidsTotal;
   let x,y;
   for (let i = 0; i < ROIDS_NUM + level; i++) {
     do{
@@ -205,6 +238,10 @@ function destroyAsteroid(index) {
 
   // destroir asteroid
   roids.splice(index, 1);
+  fxHit.play();
+
+  roidsLeft--;
+  music.setAsteroidRatio(roidsLeft == 0 ? 1 : roidsLeft / roidsTotal);
 
   // novo level quando não tiver mais asteroid
   if(roids.length == 0){
@@ -250,6 +287,7 @@ function drawShip(x, y, a, colour = "white"){
 
 function explodeShip() {
   ship.explodeTime = Math.ceil(SHIP_EXPLODE_DUR * FPS);
+  fxExplode.play();
 }
 
 function gameOver() {
@@ -342,8 +380,8 @@ function gerar_cor(opacidade = 1) {
 function newAsteroid(x, y, r) {
   if(!ship.dead){
     let lvlMult = 1;//1 + 0.1 * level;
-    if(level == 10){
-      lvlMult = 1.5; 
+    if(level >= 5){
+      lvlMult += 0.8; 
     }
     let roid = {
       x: x,
@@ -432,10 +470,67 @@ function shootLaser() {
       dist: 0,
       explodeTime: 0,
     });
+    fxLaser.play();
   }
 
   // prevenir novos disparos
   ship.canShoot = false;
+}
+
+function Music(srcLow, srcHigh){
+  this.soundLow = new Audio(srcLow);
+  this.soundHigh = new Audio(srcHigh);
+  this.low = true;
+
+  this.tempo = 1.0;
+  this.beatTime = 0;
+
+  this.play = function (){
+    if(MUSIC_ON){     
+      if(this.low){
+        this.soundLow.play();
+      }
+      else{
+        this.soundHigh.play();
+      }
+      this.low = !this.low;
+    }
+  }
+
+  this.setAsteroidRatio = function (ratio){
+    this.tempo = 1.0 - 0.75 * (1.0 - ratio);
+  }
+
+  this.tick = function (){ 
+    if(this.beatTime == 0){
+      this.play();
+      this.beatTime = Math.ceil(this.tempo * FPS);
+    }
+    else{
+      this.beatTime--;
+    }
+   }
+}
+
+function Sound(src, maxStreams = 1, vol = 1.0){
+  this.streamNum = 0;
+  this.streams = [];
+  for (let i = 0; i < maxStreams; i++) {
+    this.streams.push(new Audio(src)); 
+    this.streams[i].volume = vol;
+  }
+
+  this.play = function() {
+    if(SOUND_ON){
+      this.streamNum = (this.streamNum + 1) % maxStreams;
+      this.streams[this.streamNum].play();
+    }
+  }
+
+  this.stop = function(){
+    this.streams[this.streamNum].pause();
+    this.streams[this.streamNum].currentTime = 0;
+  }
 }
 
 function update() {
@@ -443,6 +538,7 @@ function update() {
   let exploding = ship.explodeTime > 0;
 
   
+  music.tick();
 
   // desenhar o espaço
   ctx.fillStyle = '#000';
@@ -452,12 +548,13 @@ function update() {
 
   if(ship.thrusting && !ship.dead){
     let lvlSPD = 1; //0.1 * level;
-    if(level == 10){
-      lvlSPD = 1.5; 
+    if(level >= 5){
+      lvlSPD += 0.8; 
     }
     ship.thrust.x += (SHIP_THRUST + lvlSPD) * Math.cos(ship.a) / FPS;
     ship.thrust.y -= (SHIP_THRUST + lvlSPD) * Math.sin(ship.a) / FPS;
-
+    fxThrust.play();
+    
     //desenhar impulso
     if(!exploding && blinkOn){    
       
@@ -488,9 +585,11 @@ function update() {
       ctx.stroke();
 
     }
-  }else{
+  }
+  else{
     ship.thrust.x -= FRICTION * ship.thrust.x / FPS;
     ship.thrust.y -= FRICTION * ship.thrust.y / FPS;
+    fxThrust.stop();
   }
 
 
