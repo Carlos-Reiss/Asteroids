@@ -6,8 +6,8 @@
 }
 
 body {
-  background: #5c6069;
-  font-family: 'Zen Dots', cursive;
+  background: #2A1D4F;
+  font-family: 'Poppins', cursive;
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
 
@@ -32,8 +32,8 @@ body {
   padding: 12px;
   display: flex;
   justify-content: center;
-  box-shadow: 1px 3px 6px #5c6069;
-  background: #000;
+  box-shadow: 1px 3px 6px #2A1D4F;
+  background: #160F29;
 }
 .header-game h1 {
   color: #f5f5f5;
@@ -55,6 +55,7 @@ body {
   z-index: 1;
   position: absolute;
   font-size: 14px;
+  color: #f5f5f5;
 }
 
 .log-game button{
@@ -64,7 +65,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 26px;
+  font-size: 36 px;
   margin-top: 10px;
 }
 
@@ -79,6 +80,7 @@ body {
   border-radius: 10px;
   border: none;
   outline: none;
+  width: 250px;
 
 }
 
@@ -87,7 +89,7 @@ body {
   border-radius: 10px;
   border: 0;
   box-sizing: border-box;
-  font-family: 'Zen Dots', cursive;
+  font-family: 'Poppins', cursive;
   color: white;
   background-color: #000;
   margin-left: 10px;
@@ -119,7 +121,7 @@ body {
   border-radius: 10px;
   border: 0;
   box-sizing: border-box;
-  font-family: 'Zen Dots', cursive;
+  font-family: 'Poppins', cursive;
   color: white;
   background-color: #000;
   margin-left: 10px;
@@ -136,17 +138,10 @@ body {
   border-radius: 10px;
   border: 0;
   box-sizing: border-box;
-  font-family: 'Zen Dots', cursive;
+  font-family: 'Poppins', cursive;
   color: white;
   background-color: #000;
   margin-left: 10px;  
-}
-
-div canvas {
-  /* @media(min-width: 800px){ */
-    /* width: 600px; */
-    /* height: 60px; */
-  /* } */
 }
 
 #gameCanvas{
@@ -179,7 +174,7 @@ div canvas {
 }
 
 #restart {
-  font-family: 'Zen Dots', cursive;
+  font-family: 'Poppins', cursive;
 }
 
 .log-game div button .btn{
@@ -195,7 +190,7 @@ div canvas {
 }
 
 ::-webkit-scrollbar-track {
-  background-color: #5c6069;
+  background-color: #2A1D40;
 }
 ::-webkit-scrollbar {
   width: 6px;
@@ -216,9 +211,12 @@ div canvas {
   border: 1px solid white;
   border-radius: 8px;
   z-index: 0;
+  color: #f5f5f5;
+
 }
 .rank{
   padding: 10px;
   margin-left: 60px;  
-  font-size: 12px;
+  font-size: 16px;
+  color: #f5f5f5;
 }
